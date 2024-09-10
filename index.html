@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <title>LED Control</title>
+    <style>
+      html {
+        font-family: Helvetica;
+        display: inline-block;
+        margin: 0px auto;
+        text-align: center;
+        background: #fff;
+        color: #3f3f3f;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      body {
+        margin: 0px;
+        counter-reset: card-count;
+        overflow-x: hidden;
+      }
+
+      p {
+      }
+
+      * {
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      *:focus {
+        outline: none;
+      }
+
+      .button {
+        position: relative;
+        top: 50%;
+        width: 80px;
+        height: 40px;
+        margin: 0 auto 0 0;
+        overflow: hidden;
+      }
+
+      .button.r,
+      .button.r .layer {
+        border-radius: 100px;
+      }
+
+      .checkbox {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 3;
+      }
+
+      .knobs {
+        z-index: 2;
+      }
+
+      .layer {
+        width: 100%;
+        background-color: #ebf7fc;
+        transition: 0.3s ease all;
+        z-index: 1;
+      }
+
+      /* Button 3 */
+      .toggle .knobs:before {
+        content: attr(data-on);
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: 24px;
+        height: 12px;
+        color: #fff;
+        font-size: 10px;
+        font-weight: bold;
+        text-align: center;
+        line-height: 1;
+        padding: 9px 4px;
+        background-color: #03a9f4;
+        border-radius: 50%;
+        transition: 0.3s ease all,
+          left 0.3s cubic-bezier(0.18, 0.89, 0.35, 1.15);
+      }
+
+      .toggle .checkbox:active + .knobs:before {
+        width: 46px;
+        border-radius: 100px;
+      }
+
+      .toggle .checkbox:checked:active + .knobs:before {
+        margin-left: -26px;
+      }
+
+      .toggle .checkbox:checked + .knobs:before {
+        content: attr(data-off);
+        left: 42px;
+        background-color: #f44336;
+      }
+
+      .toggle .checkbox:checked ~ .layer {
+        background-color: #fcebeb;
+      }
+
+      .knobs,
+      .layer {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+
+      .hr-line {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        &:after,
+        &:before {
+          content: "";
+          background-color: #666;
+          height: 1px;
+          width: 100%;
+          margin: 12px;
+        }
+      }
+
+      .output {
+        position: relative;
+        width: 40px;
+        padding-top: 10px;
+        height: 32px;
+        margin-left: 50%;
+        font-family: cursive;
+        font-size: 16px;
+        line-height: 20px;
+        color: #6441a5;
+        text-align: center;
+        background: #f5f9ff;
+        border: 2px solid #6441a5;
+        border-radius: 50% 50% 50% 0%;
+        -webkit-transition: opacity 0.3s ease-in-out 0s;
+        transition: opacity 0.3s ease-in-out 0s;
+      }
+
+      .range {
+        --active: #5628ee;
+        --value: #fff;
+        --line: #cdd9ed;
+        touch-action: none;
+        -webkit-appearance: none;
+        appearance: none;
+        user-select: none;
+        width: 320px;
+        height: 2px;
+        border-radius: 1px;
+        background: var(--line);
+        position: relative;
+      }
+      .range::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 15px;
+        height: 15px;
+        background: #f5f9ff;
+        border: 2px solid #6441a5;
+        cursor: pointer;
+        border-radius: 18px;
+        transition: 0.5s ease;
+      }
+      .range::-webkit-slider-thumb:focus,
+      .range::-webkit-slider-thumb:active {
+        padding: 8px;
+      }
+      .range:focus,
+      .range:active {
+        outline: none;
+      }
+
+      .output {
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+      }
+
+      .row label {
+        margin: 0 0 0 auto;
+      }
+
+      .slider {
+        width: 320px;
+        margin: auto;
+      }
+
+      .number {
+        width: 64px;
+        margin: 0 auto 0 0;
+        padding: 4px;
+      }
+
+      .card {
+        margin: 8px 12px 0 12px;
+        padding: 16px 8px;
+        background-color: #fff;
+        box-shadow: 0 10px 20px -8px #c5d6d6;
+        border-radius: 4px;
+        position: relative;
+      }
+
+      .card:before {
+        counter-increment: card-count;
+        content: counter(card-count);
+        position: absolute;
+        top: 0;
+        left: 0;
+        color: #d7e3e3;
+        color: #a0a0a0;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 50%;
+        /* background: #a0a0a0; */
+        margin-left: 2px;
+      }
+
+      .checkbox:disabled + .knobs {
+        opacity: 0.8;
+        filter: grayscale(1);
+      }
+
+      .stopwatch {
+        background-color: #f0f2f2;
+        box-shadow: 0 10px 20px -8px #c5d6d6;
+        padding: 20px 24px;
+        border-radius: 20px;
+        margin: 8px auto;
+      }
+
+      .timerDisplay {
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <img
+      style="width: 102px; margin-top: 12px"
+      src="https://upload.wikimedia.org/wikipedia/fa/thumb/f/fd/University_of_Tehran_logo.svg/1200px-University_of_Tehran_logo.svg.png"
+    />
+
+    <h3 class="hr-line">Motion Vision</h3>
+
+    <div
+      style="
+        display: flex;
+        gap: 16px;
+        flex-direction: column;
+        padding-bottom: 48px;
+      "
+    >
+      <div class="row">
+        <label> Device is : </label>
+
+        <div class="button r toggle">
+          <input type="checkbox" class="checkbox" id="onoff" />
+          <div class="knobs" data-on="ON" data-off="OFF"></div>
+          <div class="layer"></div>
+        </div>
+      </div>
+
+      <div class="stopwatch">
+        <div id="timer" class="timerDisplay">00 : 00 : 00</div>
+      </div>
+
+      <h4 class="hr-line" style="margin-top: 6px">Blur</h4>
+
+      <div class="row">
+        <label> Bluring : </label>
+        <div class="button r toggle">
+          <input type="checkbox" class="checkbox" id="startstop" />
+          <div class="knobs" data-on="Start" data-off="Stop"></div>
+          <div class="layer"></div>
+        </div>
+      </div>
+
+      <div class="slider">
+        <div class="output"></div>
+        <input
+          id="range"
+          class="range"
+          type="range"
+          min="0.1"
+          max="2"
+          value="0.1666"
+          step=".0001"
+          oninput="move(this)"
+        />
+      </div>
+
+      <div class="row">
+        <label> Auto B : </label>
+        <div class="button r toggle">
+          <input type="checkbox" class="checkbox" id="automanual" />
+          <div class="knobs" data-on="auto" data-off="manu"></div>
+          <div class="layer"></div>
+        </div>
+      </div>
+
+      <h4 class="hr-line" style="margin-top: 6px">Custom Level</h4>
+
+      <div class="row">
+        <!-- <label> Total Time: </label>
+        <input type="number" id="totalTime" class="number" /> -->
+
+        <label> Total Level: </label>
+        <input type="number" id="totalLevel" class="number" min="0" value="0" />
+      </div>
+
+      <div class="row">
+        <label> Custom is : </label>
+        <div class="button r toggle">
+          <input type="checkbox" class="checkbox" id="startstopCustom" />
+          <div class="knobs" data-on="Start" data-off="Stop"></div>
+          <div class="layer"></div>
+        </div>
+      </div>
+
+      <div id="container"></div>
+
+      <!-- <div class="card">
+        <div class="row">
+          <label> Level: </label>
+          <input type="number" class="number" />
+
+          <label> Time: </label>
+          <input type="number" class="number" min="0" value="0" />
+        </div>
+      </div> -->
+    </div>
+  </body>
+
+  <script defer>
+    function move(el) {
+      var x = el.value;
+      var ele = el.previousElementSibling;
+      ele.style.marginLeft = x * 50 + "%";
+      ele.innerHTML = (+x).toFixed(2) + "s";
+    }
+
+    move(range);
+
+    let isOn = true;
+    let status = "normal";
+    let isBlur = false;
+    let isAuto = false;
+    let isCustomStart = false;
+    let interval = range.value;
+
+    onoff.onchange = () => {
+      isOn = !onoff.checked;
+      let elm = document.querySelector(".stopwatch");
+      while (elm) {
+        elm.classList[onoff.checked ? "add" : "remove"]("hidden");
+        elm = elm.nextElementSibling;
+      }
+    };
+    startstop.onchange = () => {
+      isBlur = !startstop.checked;
+      isAuto = false;
+      isCustomStart = false;
+    };
+    automanual.onchange = () => {
+      isAuto = !automanual.checked;
+      isBlur = false;
+      isCustomStart = false;
+    };
+    startstopCustom.onchange = () => {
+      isCustomStart = !startstopCustom.checked;
+      isBlur = false;
+      isAuto = false;
+    };
+
+    range.onchange = () => {
+      interval = range.value;
+      move(range);
+    };
+
+    function render() {
+      onoff.checked = !isOn;
+      startstop.checked = !isBlur;
+      automanual.checked = !isAuto;
+      startstopCustom.checked = !isCustomStart;
+
+      if (isCustomStart || isAuto || isBlur) {
+        status = "blur";
+      } else {
+        status = "normal";
+      }
+
+      let timerStarted = !!_timerIntervalId;
+      if (!timerStarted && status == "blur") startTimer();
+      if (timerStarted && status == "normal") stopTimer();
+      // range.value = +interval;
+      requestAnimationFrame((i) => requestAnimationFrame((i) => render()));
+    }
+
+    requestAnimationFrame((i) => requestAnimationFrame((i) => render()));
+
+    let totalLevelOninput = () => {
+      let level = totalLevel.value;
+      level = level <= 0 ? 0 : level;
+      startstopCustom.disabled = level <= 0;
+      if (level <= 0) startstopCustom.checked = true;
+
+      let cards = document.querySelectorAll(".card");
+      if (cards.length <= level) {
+        for (let i = 0; i < level - cards.length; i++) {
+          let lastCheck = container.querySelector(
+            '.card:last-of-type input[type="checkbox"]'
+          )?.checked;
+
+          container.insertAdjacentHTML(
+            "beforeend",
+            `<div class="card">
+              <div class="row">
+                <label> Time: </label>
+                <input type="number" class="number" />
+
+                <div class="row">
+                 <label> ON / OFF : </label>
+                 <div class="button r toggle">
+                   <input type="checkbox" class="checkbox" ${
+                     !lastCheck ? " checked " : ""
+                   }/>
+                   <div class="knobs" data-on="ON" data-off="OFF"></div>
+                   <div class="layer"></div>
+                 </div>
+               </div>
+              </div>
+            </div>`
+          );
+        }
+      } else {
+        cards.forEach((div, index) => {
+          if (index >= level) {
+            div.remove();
+          }
+        });
+      }
+    };
+
+    totalLevel.oninput = totalLevelOninput;
+    totalLevelOninput();
+
+    //timer
+    let seconds = 0;
+    let _timerIntervalId;
+
+    function startTimer() {
+      _timerIntervalId = setInterval(() => {
+        seconds++;
+        const hours = String(Math.floor(seconds / 3600)).padStart(2, "0");
+        const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(
+          2,
+          "0"
+        );
+        const secs = String(seconds % 60).padStart(2, "0");
+        timer.innerText = `${hours} : ${minutes} : ${secs}`;
+      }, 10);
+    }
+
+    function stopTimer() {
+      clearInterval(_timerIntervalId);
+      _timerIntervalId = null;
+    }
+  </script>
+</html>
