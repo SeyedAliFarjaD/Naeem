@@ -333,7 +333,7 @@
         </div>
       </div>
 
-      <div class="slider">
+      <div class="slider hidden">
         <div class="output"></div>
         <input
           id="range"
@@ -417,7 +417,7 @@
 
       promise.finally((i) => (loading[index] = false));
 
-      return promise.then((response) => response.json());
+      return promise;
     }
 
     let isActive = false;
