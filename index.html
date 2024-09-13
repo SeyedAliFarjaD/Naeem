@@ -257,12 +257,45 @@
       .hidden {
         display: none;
       }
+
+      .card.active {
+        border: #4fd93e 1.6px dashed;
+      }
+
+      .progress-bar {
+        top: 0;
+        position: fixed;
+        height: 4px;
+        background-color: rgba(5, 114, 206, 0.2);
+        width: 100%;
+        overflow: hidden;
+      }
+
+      .progress-bar-value {
+        width: 100%;
+        height: 100%;
+        background-color: rgb(5, 114, 206);
+        animation: indeterminateAnimation 1s infinite linear;
+        transform-origin: 0% 50%;
+      }
+
+      @keyframes indeterminateAnimation {
+        0% {
+          transform: translateX(0) scaleX(0);
+        }
+        40% {
+          transform: translateX(0) scaleX(0.4);
+        }
+        100% {
+          transform: translateX(100%) scaleX(0.5);
+        }
+      }
     </style>
   </head>
   <body>
     <img
       style="width: 102px; margin-top: 12px"
-      src="https://upload.wikimedia.org/wikipedia/fa/thumb/f/fd/University_of_Tehran_logo.svg/1200px-University_of_Tehran_logo.svg.png"
+      src="data:image/jpeg;base64,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"
     />
 
     <h3 class="hr-line">Motion Vision</h3>
@@ -275,7 +308,7 @@
         padding-bottom: 48px;
       "
     >
-      <div class="row">
+      <div class="row hidden">
         <label> Device is : </label>
 
         <div class="button r toggle">
@@ -285,7 +318,7 @@
         </div>
       </div>
 
-      <div class="stopwatch">
+      <div id="stopwatch" class="stopwatch">
         <div id="timer" class="timerDisplay">00 : 00 : 00</div>
       </div>
 
@@ -306,10 +339,10 @@
           id="range"
           class="range"
           type="range"
-          min="0.1"
-          max="2"
-          value="0.1666"
-          step=".0001"
+          min="1"
+          max="10"
+          value="6"
+          step="1"
           oninput="move(this)"
         />
       </div>
@@ -327,7 +360,7 @@
 
       <div class="row">
         <!-- <label> Total Time: </label>
-        <input type="number" id="totalTime" class="number" /> -->
+        <input type='number' id='totalTime' class='number' /> -->
 
         <label> Total Level: </label>
         <input type="number" id="totalLevel" class="number" min="0" value="0" />
@@ -344,15 +377,19 @@
 
       <div id="container"></div>
 
-      <!-- <div class="card">
-        <div class="row">
+      <!-- <div class='card'>
+        <div class='row'>
           <label> Level: </label>
-          <input type="number" class="number" />
+          <input type='number' class='number' />
 
           <label> Time: </label>
-          <input type="number" class="number" min="0" value="0" />
+          <input type='number' class='number' min='0' value='0' />
         </div>
       </div> -->
+    </div>
+
+    <div id="progress" class="progress-bar hidden">
+      <div class="progress-bar-value"></div>
     </div>
   </body>
 
@@ -360,12 +397,30 @@
     function move(el) {
       var x = el.value;
       var ele = el.previousElementSibling;
-      ele.style.marginLeft = x * 50 + "%";
-      ele.innerHTML = (+x).toFixed(2) + "s";
+      ele.style.marginLeft = x * 10 - 5 + "%";
+      ele.innerHTML = +x + "";
     }
 
     move(range);
 
+    let controllers = {};
+    let loading = [];
+    function callApi(name, controllerName) {
+      controllers[controllerName]?.abort();
+      controllers[controllerName] = new AbortController();
+
+      let index = loading.push(true) - 1;
+
+      let promise = fetch("http://192.168.1.1/" + name, {
+        signal: controllers[controllerName].signal,
+      });
+
+      promise.finally((i) => (loading[index] = false));
+
+      return promise.then((response) => response.json());
+    }
+
+    let isActive = false;
     let isOn = true;
     let status = "normal";
     let isBlur = false;
@@ -381,27 +436,130 @@
         elm = elm.nextElementSibling;
       }
     };
+
     startstop.onchange = () => {
       isBlur = !startstop.checked;
       isAuto = false;
       isCustomStart = false;
+
+      const reponse = callApi(isBlur ? "glassOn" : "glassOff", "onoff").then(
+        (i) => (isActive = isBlur)
+      );
+
+      restartTimer();
     };
+
+    // let _autoTimer = null;
+    // function startAutoTimer() {
+    //   clearInterval(_autoTimer);
+
+    //   //1000 / 6 / 2
+    //   let time = 500 / interval;
+    //   _autoTimer = setInterval(() => {
+    //     if (status != 'auto') return clearInterval(_autoTimer);
+    //     isActive = !isActive;
+    //   }, time);
+    // }
+
     automanual.onchange = () => {
       isAuto = !automanual.checked;
       isBlur = false;
       isCustomStart = false;
+
+      //run timer
+      const reponse = callApi(
+        isAuto ? "glassOnOffTimer" : "glassOff",
+        "onoff"
+      ).then((i) => {
+        isActive = !isActive;
+        startAutoTimer();
+      });
+
+      restartTimer();
     };
+
+    let _customTimer = null;
+    let _customLevel = 0;
+    let _customMiliSeconds = 0;
+    function startCustomTimer() {
+      clearInterval(_customTimer);
+
+      _customLevel = 0;
+      _customMiliSeconds = 0;
+      container
+        .querySelectorAll(".card")
+        .forEach((i) => i.classList.remove("active"));
+
+      if (!isCustomStart) return;
+
+      const activeNumber = (level) => {
+        container
+          .querySelectorAll(".card")
+          .forEach((i) => i.classList.remove("active"));
+        container.querySelectorAll(".card")[level].classList.add("active");
+        let isCheck = container.querySelectorAll(`input[type='checkbox']`)[
+          level
+        ].checked;
+        const reponse = callApi(
+          !isCheck ? "glassOn" : "glassOff",
+          "custom"
+        ).then((i) => {
+          isActive = !isActive;
+        });
+      };
+
+      activeNumber(0);
+
+      _customTimer = setInterval(() => {
+        if (status != "custom") return clearInterval(_customTimer);
+        _customMiliSeconds += 100;
+
+        let lastLevel = _customLevel;
+        let lastVal = 0;
+
+        _customLevel = Array.from(
+          container.querySelectorAll(`input[type='number']`)
+        )
+          .map((i) => (lastVal = lastVal + +i.value * 1000))
+          .findIndex((i) => i > _customMiliSeconds);
+
+        if (_customLevel == -1) {
+          _customLevel = 0;
+          _customMiliSeconds = 0;
+        }
+
+        if (lastLevel !== _customLevel) activeNumber(_customLevel);
+      }, 100);
+    }
+
     startstopCustom.onchange = () => {
       isCustomStart = !startstopCustom.checked;
       isBlur = false;
       isAuto = false;
+
+      startCustomTimer();
+      restartTimer();
     };
 
+    let _changeRangeTimoutId;
+    let _changeRangeController;
     range.onchange = () => {
       interval = range.value;
       move(range);
+
+      //call fetch
+      clearTimeout(_changeRangeTimoutId);
+      let timeoutId = (_changeRangeTimoutId = setTimeout(async () => {
+        const reponse = await callApi(
+          "setInterval?value=" + parseInt(500 / +interval),
+          "setInterval"
+        );
+        startAutoTimer();
+      }, 479));
     };
 
+    let _wasActive = false;
+    let _isLoading = false;
     function render() {
       onoff.checked = !isOn;
       startstop.checked = !isBlur;
@@ -409,14 +567,26 @@
       startstopCustom.checked = !isCustomStart;
 
       if (isCustomStart || isAuto || isBlur) {
-        status = "blur";
+        if (isCustomStart) status = "custom";
+        if (isAuto) status = "auto";
+        if (isBlur) status = "blur";
       } else {
         status = "normal";
       }
 
       let timerStarted = !!_timerIntervalId;
-      if (!timerStarted && status == "blur") startTimer();
+      if (!timerStarted && status != "normal") startTimer();
       if (timerStarted && status == "normal") stopTimer();
+
+      if (_wasActive !== isActive) {
+        _wasActive = isActive;
+        stopwatch.style.background = isActive ? "#4fd93e" : "";
+      }
+
+      if (_isLoading != loading.some((i) => i)) {
+        _isLoading = loading.some((i) => i);
+        progress.classList[_isLoading ? "remove" : "add"]("hidden");
+      }
       // range.value = +interval;
       requestAnimationFrame((i) => requestAnimationFrame((i) => render()));
     }
@@ -433,28 +603,14 @@
       if (cards.length <= level) {
         for (let i = 0; i < level - cards.length; i++) {
           let lastCheck = container.querySelector(
-            '.card:last-of-type input[type="checkbox"]'
+            `.card:last-of-type input[type='checkbox']`
           )?.checked;
 
           container.insertAdjacentHTML(
             "beforeend",
-            `<div class="card">
-              <div class="row">
-                <label> Time: </label>
-                <input type="number" class="number" />
-
-                <div class="row">
-                 <label> ON / OFF : </label>
-                 <div class="button r toggle">
-                   <input type="checkbox" class="checkbox" ${
-                     !lastCheck ? " checked " : ""
-                   }/>
-                   <div class="knobs" data-on="ON" data-off="OFF"></div>
-                   <div class="layer"></div>
-                 </div>
-               </div>
-              </div>
-            </div>`
+            `<div class='card'> <div class='row'> <label> Time: </label> <input type='number' class='number' value='1'/> <div class='row'>  <label> ON / OFF : </label>  <div class='button r toggle'> <input type='checkbox' class='checkbox' ${
+              !lastCheck ? " checked " : ""
+            }/>  <div class='knobs' data-on='ON' data-off='OFF'></div>  <div class='layer'></div>  </div>  </div> </div> </div>`
           );
         }
       } else {
@@ -490,5 +646,11 @@
       clearInterval(_timerIntervalId);
       _timerIntervalId = null;
     }
+
+    function restartTimer() {
+      seconds = 0;
+    }
+
+    stopwatch.onclick = restartTimer;
   </script>
 </html>
